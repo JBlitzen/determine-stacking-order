@@ -25,16 +25,32 @@ var class_stacking_order = {
 		{
 			var child_raw = children[child_it];
 			var child = $(child_raw);
-			if (child[0].nodeType == 1)
+			if (child_raw.nodeType == 1)
 			{
 				if (!reset)
 				{
 					var pos = child.offset();
+
+					child.attr("data-stacking-order-element", "1");
+
 					var old_transform = "" + child.css("transform").trim();
 					if (old_transform == "") old_transform == "none";
+					child.attr("data-stacking-order-transform", old_transform).css("transform", "none").css("-ms-transform", "none").css("-webkit-transform", "none");
+
 					var old_topleftradius = "" + child_raw.style.borderTopLeftRadius.trim();
 					if (old_topleftradius == "") old_topleftradius == "0px";
-					child.attr("data-stacking-order-element", "1").attr("data-stacking-order-transform", old_transform).attr("data-stacking-order-topleftradius", old_topleftradius).css("border-top-left-radius", "0px").css("transform", "none").css("-ms-transform", "none").css("-webkit-transform", "none");
+					child.attr("data-stacking-order-topleftradius", old_topleftradius).css("border-top-left-radius", "0px");
+
+					var old_display = "" + child_raw.style.display.trim();
+					if (old_display == "block")
+					{
+						child.attr("data-stacking-order-display", "block").css("display", "inline-block");
+					}
+					else
+					{
+						child.attr("data-stacking-order-display", "");
+					}
+
 					class_stacking_order.stacking_order_elem_count++;
 					var new_transform = "translate(" + (1 - pos.left) + "px, " + (1 - pos.top) + "px)";
 					child.css("transform", new_transform);
@@ -44,7 +60,15 @@ var class_stacking_order = {
 					var old_transform = "" + child.attr("data-stacking-order-transform");
 					var old_topleftradius = "" + child.attr("data-stacking-order-topleftradius");
 					child.css("transform", old_transform).css("-ms-transform", old_transform).css("-webkit-transform", old_transform).css("border-top-left-radius", old_topleftradius);
+
 					child.removeAttr("data-stacking-order-element").removeAttr("data-stacking-order-transform").removeAttr("data-stacking-order-topleftradius")
+
+					var old_display = "" + child.attr("data-stacking-order-display");
+					if (old_display == "block")
+					{
+						child.css("display", "block");
+					}
+					child.removeAttr("data-stacking-order-display");
 				}
 			}
 		}
