@@ -1,7 +1,7 @@
 # determine-stacking-order
 Javascript class to determine vertical stacking order of elements on a document.
 
-Stacking order is distinct from but similar to the z-index CSS properties of each element.  Stacking order is the actual Z order that all elements on the page are painted in, so the background of the <body> element should have the lowest value if any, and the topmost visible element should have the highest.
+Stacking order is similar to, but distinct from, the z-index CSS property of an element.  Stacking order is the actual Z order that all elements on the page are painted in, so the background of the body element should have the lowest value if any, and the topmost visible element should have the highest.  This painting order is influenced by z-index properties but not directly correlated to them.
 
 ***CURRENTLY REQUIRES JQUERY*** for .offset() and removeAttribute(), but you can replace these with vanillaJS if you like.  Wrote the thing in three hours.
 
@@ -42,3 +42,8 @@ Once all elements have been processed or a guard counter has been hit, the code 
 
 
 This has been tested on somewhat complex pages, but it stands to reason something will break it.  Please test carefully on any page you intend to use it on.
+
+For more reading on how stacking order works in CSS, take a look at these two links:
+
+https://www.w3.org/TR/CSS21/zindex.html
+http://vanseodesign.com/css/css-stack-z-index/
