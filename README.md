@@ -47,3 +47,9 @@ For more reading on how stacking order works in CSS, take a look at these two li
 
 https://www.w3.org/TR/CSS21/zindex.html
 http://vanseodesign.com/css/css-stack-z-index/
+
+
+TO DO
+-----
+
+Handling of block elements is limited to whether their display property is block.  I need to expand this to account for tables and other block-like elements, by checking against a list of display or tagName values, and saving their actual display or tagName value for resetting later.
