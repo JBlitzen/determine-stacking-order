@@ -28,12 +28,16 @@ var class_stacking_order = {
 	root_document: null,
 	root_node: null,
 	process_dom: function(root_document, root_node) {
+		var root_node_align = $(root_node).css("text-align");
+		var root_node_padding_top = $(root_node).css("padding-top");
+		$(root_node).css("text-align", "left").css("padding-top", "0px");
 		class_stacking_order.root_node = root_node;
 		class_stacking_order.root_document = root_document;
 		class_stacking_order.stacking_order_init_function(root_node, false, 1);
 		class_stacking_order.stacking_order = class_stacking_order.stacking_order_elem_count;
 		class_stacking_order.stacking_order_scan_all_elements();
 		class_stacking_order.stacking_order_init_function(root_node, true, 1);
+		$(root_node).css("text-align", root_node_align).css("padding-top", root_node_padding_top);
 
 		var result_message = "Processed " + class_stacking_order.stacking_order_elem_count + " elements, results are in 'data-stacking-order' attributes.";
 		if (console && console.log)
@@ -53,22 +57,98 @@ var class_stacking_order = {
 			{
 				if (!reset)
 				{
-					var pos = child.offset();
-
 					child.attr("data-stacking-order-element", "1");
 
 					var old_transform = "" + child.css("transform").trim();
-					if (old_transform == "") old_transform == "none";
-					child.attr("data-stacking-order-transform", old_transform).css("transform", "none").css("-ms-transform", "none").css("-webkit-transform", "none");
+					if (old_transform == "") old_transform == "";
+					child.attr("data-stacking-order-transform", old_transform).css("transform", "").css("-ms-transform", "").css("-webkit-transform", "");
 
 					var old_topleftradius = "" + child_raw.style.borderTopLeftRadius.trim();
 					if (old_topleftradius == "") old_topleftradius == "0px";
 					child.attr("data-stacking-order-topleftradius", old_topleftradius).css("border-top-left-radius", "0px");
 
 					var old_display = "" + child_raw.style.display.trim();
-					if (old_display == "block")
+
+
+
+					var tag_name = child_raw.tagName.toLowerCase();
+					if (
+						(old_display == "block")
+						|| (old_display == "flex")
+						|| (old_display == "table")
+					)
 					{
-						child.attr("data-stacking-order-display", "block").css("display", "inline-block");
+						child.attr("data-stacking-order-display", old_display).css("display", "inline-block");
+						child.attr("data-stacking-order-block", "1");
+
+						var old_position = child.css("position");
+						child.attr("data-stacking-order-position", old_position).css("position", "absolute");
+
+						var old_top = child.css("top");
+						child.attr("data-stacking-order-top", old_top).css("top", "0px");
+
+						var old_left = child.css("left");
+						child.attr("data-stacking-order-left", old_left).css("left", "0px");
+					}
+					else if (
+						(
+							(old_display == "")
+							|| (old_display == "initial")
+						)
+						&& (
+							(tag_name == "address")
+							|| (tag_name == "article")
+							|| (tag_name == "aside")
+							|| (tag_name == "blockquote")
+							|| (tag_name == "canvas")
+							|| (tag_name == "dd")
+							|| (tag_name == "div")
+							|| (tag_name == "dl")
+							|| (tag_name == "fieldset")
+							|| (tag_name == "figcaption")
+							|| (tag_name == "figure")
+							|| (tag_name == "footer")
+							|| (tag_name == "form")
+							|| (tag_name == "h1")
+							|| (tag_name == "h2")
+							|| (tag_name == "h3")
+							|| (tag_name == "h4")
+							|| (tag_name == "h5")
+							|| (tag_name == "h6")
+							|| (tag_name == "header")
+							|| (tag_name == "hgroup")
+							|| (tag_name == "hr")
+							|| (tag_name == "li")
+							|| (tag_name == "main")
+							|| (tag_name == "nav")
+							|| (tag_name == "noscript")
+							|| (tag_name == "ol")
+							|| (tag_name == "output")
+							|| (tag_name == "p")
+							|| (tag_name == "pre")
+							|| (tag_name == "section")
+							|| (tag_name == "table")
+							|| (tag_name == "tbody")
+							|| (tag_name == "thead")
+							|| (tag_name == "td")
+							|| (tag_name == "tr")
+							|| (tag_name == "tfoot")
+							|| (tag_name == "ul")
+							|| (tag_name == "video")
+						)
+					)
+					{
+						child.attr("data-stacking-order-display", old_display).css("display", "inline-block");
+						child.attr("data-stacking-order-block", "1");
+
+						var old_position = child.css("position");
+						child.attr("data-stacking-order-position", old_position).css("position", "absolute");
+
+						var old_top = child.css("top");
+						child.attr("data-stacking-order-top", old_top).css("top", "0px");
+
+						var old_left = child.css("left");
+						child.attr("data-stacking-order-left", old_left).css("left", "0px");
 					}
 					else
 					{
@@ -76,6 +156,7 @@ var class_stacking_order = {
 					}
 
 					class_stacking_order.stacking_order_elem_count++;
+					var pos = child.offset();
 					var new_transform = "translate(" + (1 - pos.left) + "px, " + (1 - pos.top) + "px)";
 					child.css("transform", new_transform);
 				}
@@ -88,11 +169,23 @@ var class_stacking_order = {
 					child.removeAttr("data-stacking-order-element").removeAttr("data-stacking-order-transform").removeAttr("data-stacking-order-topleftradius")
 
 					var old_display = "" + child.attr("data-stacking-order-display");
-					if (old_display == "block")
+					var old_block = "" + child.attr("data-stacking-order-block");
+					if ((old_display == "block") || (old_block == "1"))
 					{
-						child.css("display", "block");
+						child.css("display", old_display);
+						if (old_block == "1")
+						{
+							var old_position = child.attr("data-stacking-order-position");
+							child.css("position", old_position);
+
+							var old_top = child.attr("data-stacking-order-top");
+							child.css("top", old_top);
+
+							var old_left = child.attr("data-stacking-order-left");
+							child.css("left", old_left);
+						}
 					}
-					child.removeAttr("data-stacking-order-display");
+					child.removeAttr("data-stacking-order-display").removeAttr("data-stacking-order-block");
 				}
 			}
 		}
@@ -102,7 +195,14 @@ var class_stacking_order = {
 			if (child.nodeType == 1)
 			{
 				var child_tag = child.tagName.toLowerCase();
-				if (child_tag != "svg")
+				var child_display = child.style.display;
+				if (
+					!(
+						(child_tag == "svg")
+						|| (child_tag == "canvas")
+						|| (child_tag == "video")
+					)
+				)
 				{
 					class_stacking_order.stacking_order_init_function(child, reset, depth + 1);
 				}
