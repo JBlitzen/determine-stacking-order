@@ -3,7 +3,7 @@ Javascript class to determine vertical stacking order of elements on a document.
 
 Stacking order is similar to, but distinct from, the z-index CSS property of an element.  Stacking order is the actual Z order that all elements on the page are painted in, so the background of the body element should have the lowest value if any, and the topmost visible element should have the highest.  This painting order is influenced by z-index properties but not directly correlated to them.
 
-***CURRENTLY REQUIRES JQUERY*** for .offset() and removeAttribute(), but you can replace these with vanillaJS if you like.  Wrote the thing in three hours.
+***CURRENTLY REQUIRES JQUERY*** for ease of programming, but you can modify it to not require jQuery if inclined.
 
 
 USAGE
@@ -42,7 +42,7 @@ Once all elements have been processed or a guard counter has been hit, the code 
 Word of caution, container elements like tables don't get flagged with a stacking order, only their visible children.  So the cells in a table will have a stacking order, but the table itself won't have one independent of the cells.  This was intentional but may not suit your needs.
 
 
-This has been tested on somewhat complex pages, but I'm sure it's far from perfect.  Please test carefully on any page you intend to use it on.
+This has been tested on somewhat complex pages, but I've spent seven hours on it total so I'm sure it's far from perfect.  Please test carefully on any page you intend to use it on.
 
 For more reading on how stacking order works in CSS, take a look at these two links:
 
