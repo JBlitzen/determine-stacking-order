@@ -183,6 +183,8 @@ var class_stacking_order = {
 
 							var old_left = child.attr("data-stacking-order-left");
 							child.css("left", old_left);
+
+							child.removeAttr("data-stacking-order-position").removeAttr("data-stacking-order-top").removeAttr("data-stacking-order-left");
 						}
 					}
 					child.removeAttr("data-stacking-order-display").removeAttr("data-stacking-order-block");
