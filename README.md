@@ -39,17 +39,12 @@ Then it loops "document.elementFromPoint(1,1)" calls, returning the topmost stac
 
 Once all elements have been processed or a guard counter has been hit, the code traverses the elements again, resets their transform, display, and top left radius properties to their original settings, removes the utility attributes that were added in the process, and returns a simple report of what it did.
 
+Word of caution, container elements like tables don't get flagged with a stacking order, only their visible children.  So the cells in a table will have a stacking order, but the table itself won't have one independent of the cells.  This was intentional but may not suit your needs.
 
 
-This has been tested on somewhat complex pages, but it stands to reason something will break it.  Please test carefully on any page you intend to use it on.
+This has been tested on somewhat complex pages, but I'm sure it's far from perfect.  Please test carefully on any page you intend to use it on.
 
 For more reading on how stacking order works in CSS, take a look at these two links:
 
 https://www.w3.org/TR/CSS21/zindex.html
 http://vanseodesign.com/css/css-stack-z-index/
-
-
-TO DO
------
-
-Handling of block elements is limited to whether their display property is block.  I need to expand this to account for tables and other block-like elements, by checking against a list of display or tagName values, and saving their actual display or tagName value for resetting later.
