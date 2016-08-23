@@ -27,6 +27,23 @@ var class_stacking_order = {
 	stacking_order_elem_count: 0,
 	root_document: null,
 	root_node: null,
+	tags_to_not_enter: [
+		"embed",
+		"iframe",
+		"video",
+		"canvas",
+		"object",
+		"applet",
+		"audio",
+		"area",
+		"frameset",
+		"frame",
+		"map",
+		"area",
+		"marquee",
+		"meter",
+		"progress"
+	],
 	process_dom: function(root_document, root_node) {
 		var root_node_align = $(root_node).css("text-align");
 		var root_node_padding_top = $(root_node).css("padding-top");
@@ -68,73 +85,59 @@ var class_stacking_order = {
 					child.attr("data-stacking-order-topleftradius", old_topleftradius).css("border-top-left-radius", "0px");
 
 					var old_display = "" + child_raw.style.display.trim();
-
-
-
 					var tag_name = child_raw.tagName.toLowerCase();
 					if (
-						(old_display == "block")
-						|| (old_display == "flex")
-						|| (old_display == "table")
-					)
-					{
-						child.attr("data-stacking-order-display", old_display).css("display", "inline-block");
-						child.attr("data-stacking-order-block", "1");
-
-						var old_position = child.css("position");
-						child.attr("data-stacking-order-position", old_position).css("position", "absolute");
-
-						var old_top = child.css("top");
-						child.attr("data-stacking-order-top", old_top).css("top", "0px");
-
-						var old_left = child.css("left");
-						child.attr("data-stacking-order-left", old_left).css("left", "0px");
-					}
-					else if (
 						(
-							(old_display == "")
-							|| (old_display == "initial")
+							(old_display == "block")
+							|| (old_display == "flex")
+							|| (old_display == "table")
 						)
-						&& (
-							(tag_name == "address")
-							|| (tag_name == "article")
-							|| (tag_name == "aside")
-							|| (tag_name == "blockquote")
-							|| (tag_name == "canvas")
-							|| (tag_name == "dd")
-							|| (tag_name == "div")
-							|| (tag_name == "dl")
-							|| (tag_name == "fieldset")
-							|| (tag_name == "figcaption")
-							|| (tag_name == "figure")
-							|| (tag_name == "footer")
-							|| (tag_name == "form")
-							|| (tag_name == "h1")
-							|| (tag_name == "h2")
-							|| (tag_name == "h3")
-							|| (tag_name == "h4")
-							|| (tag_name == "h5")
-							|| (tag_name == "h6")
-							|| (tag_name == "header")
-							|| (tag_name == "hgroup")
-							|| (tag_name == "hr")
-							|| (tag_name == "li")
-							|| (tag_name == "main")
-							|| (tag_name == "nav")
-							|| (tag_name == "noscript")
-							|| (tag_name == "ol")
-							|| (tag_name == "output")
-							|| (tag_name == "p")
-							|| (tag_name == "pre")
-							|| (tag_name == "section")
-							|| (tag_name == "table")
-							|| (tag_name == "tbody")
-							|| (tag_name == "thead")
-							|| (tag_name == "td")
-							|| (tag_name == "tr")
-							|| (tag_name == "tfoot")
-							|| (tag_name == "ul")
-							|| (tag_name == "video")
+						|| (
+							(
+								(old_display == "")
+								|| (old_display == "initial")
+							)
+							&& (
+								(tag_name == "address")
+								|| (tag_name == "article")
+								|| (tag_name == "aside")
+								|| (tag_name == "blockquote")
+								|| (tag_name == "canvas")
+								|| (tag_name == "dd")
+								|| (tag_name == "div")
+								|| (tag_name == "dl")
+								|| (tag_name == "fieldset")
+								|| (tag_name == "figcaption")
+								|| (tag_name == "figure")
+								|| (tag_name == "footer")
+								|| (tag_name == "form")
+								|| (tag_name == "h1")
+								|| (tag_name == "h2")
+								|| (tag_name == "h3")
+								|| (tag_name == "h4")
+								|| (tag_name == "h5")
+								|| (tag_name == "h6")
+								|| (tag_name == "header")
+								|| (tag_name == "hgroup")
+								|| (tag_name == "hr")
+								|| (tag_name == "li")
+								|| (tag_name == "main")
+								|| (tag_name == "nav")
+								|| (tag_name == "noscript")
+								|| (tag_name == "ol")
+								|| (tag_name == "output")
+								|| (tag_name == "p")
+								|| (tag_name == "pre")
+								|| (tag_name == "section")
+								|| (tag_name == "table")
+								|| (tag_name == "tbody")
+								|| (tag_name == "thead")
+								|| (tag_name == "td")
+								|| (tag_name == "tr")
+								|| (tag_name == "tfoot")
+								|| (tag_name == "ul")
+								|| (tag_name == "video")
+							)
 						)
 					)
 					{
@@ -201,8 +204,7 @@ var class_stacking_order = {
 				if (
 					!(
 						(child_tag == "svg")
-						|| (child_tag == "canvas")
-						|| (child_tag == "video")
+						|| ($.inArray(child_tag, class_stacking_order.tags_to_not_enter) > -1)
 					)
 				)
 				{
