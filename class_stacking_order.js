@@ -27,6 +27,13 @@ var class_stacking_order = {
 	stacking_order_elem_count: 0,
 	root_document: null,
 	root_node: null,
+	root_node_align: null,
+	root_node_padding_top: null,
+	root_node_padding_left: null,
+	root_node_margin_top: null,
+	root_node_margin_left: null,
+	root_node_border_width_top: null,
+	root_node_border_width_left: null,
 	tags_to_not_enter: [
 		"embed",
 		"iframe",
@@ -42,19 +49,18 @@ var class_stacking_order = {
 		"area",
 		"marquee",
 		"meter",
-		"progress"
+		"progress",
+		"svg"
 	],
 	process_dom: function(root_document, root_node) {
-		var root_node_align = $(root_node).css("text-align");
-		var root_node_padding_top = $(root_node).css("padding-top");
-		$(root_node).css("text-align", "left").css("padding-top", "0px");
+		class_stacking_order.root_node_init(false);
 		class_stacking_order.root_node = root_node;
 		class_stacking_order.root_document = root_document;
 		class_stacking_order.stacking_order_init_function(root_node, false, 1);
 		class_stacking_order.stacking_order = class_stacking_order.stacking_order_elem_count;
 		class_stacking_order.stacking_order_scan_all_elements();
 		class_stacking_order.stacking_order_init_function(root_node, true, 1);
-		$(root_node).css("text-align", root_node_align).css("padding-top", root_node_padding_top);
+		class_stacking_order.root_node_init(true);
 
 		var result_message = "Processed " + class_stacking_order.stacking_order_elem_count + " elements, results are in 'data-stacking-order' attributes.";
 		if (console && console.log)
@@ -62,6 +68,38 @@ var class_stacking_order = {
 			console.log(result_message);
 		}
 		return result_message;
+	},
+	root_node_init: function(reset) {
+		var root_element = $(class_import_html.root_node);
+		if (!reset)
+		{
+			class_import_html.root_node_align = root_element.css("text-align");
+			class_import_html.root_node_padding_top = root_element.css("padding-top");
+			class_import_html.root_node_padding_left = root_element.css("padding-left");
+			class_import_html.root_node_margin_top = root_element.css("margin-top");
+			class_import_html.root_node_margin_left = root_element.css("margin-left");
+			class_import_html.root_node_border_width_top = "" + root_element.css("border-top-width");
+			class_import_html.root_node_border_width_left = "" + root_element.css("border-left-width");
+			root_element
+				.css("text-align", "left")
+				.css("padding-top", "0px")
+				.css("padding-left", "0px")
+				.css("margin-top", "0px")
+				.css("margin-left", "0px")
+				.css("border-top-width", "0px")
+				.css("border-left-width", "0px");
+		}
+		else
+		{
+			root_element
+				.css("text-align", class_import_html.root_node_align)
+				.css("padding-top", class_import_html.root_node_padding_top)
+				.css("padding-left", class_import_html.root_node_padding_left)
+				.css("margin-top", class_import_html.root_node_margin_top)
+				.css("margin-left", class_import_html.root_node_margin_left)
+				.css("border-top-width", class_import_html.root_node_border_width_top)
+				.css("border-left-width", class_import_html.root_node_border_width_left);
+		}
 	},
 	stacking_order_init_function: function(node, reset, depth) {
 		var children = node.childNodes;
